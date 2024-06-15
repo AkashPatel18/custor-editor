@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState} from "react";
+import "./App.css";
+import CustomEditor from "./components/Editor/Editor";
+import Button from "./components/Button/Button";
+import { EditorState, convertToRaw } from 'draft-js';
 
 function App() {
+  const [editorState, setEditorState] = useState(() => EditorState.createEmpty());
+
+  const onSave = () => {
+    const contentState = editorState.getCurrentContent();
+    const raw = JSON.stringify(convertToRaw(contentState));
+    localStorage.setItem('editorContent', raw);
+    alert('Content saved!');
+};
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <header className="App-header">
+      <div className="header-content">
+        <div className="header-title">Demo editor by Akash Patel</div>
+        <Button onSave={onSave}/>
+      </div>
+    </header>
+    <div className="container">
+      <CustomEditor setEditorState={setEditorState} editorState={editorState}/>
     </div>
+  </div>
   );
 }
 
